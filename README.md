@@ -30,7 +30,7 @@ pkg install openssl
 pkg install openssh
 ```
 -To Install Heroku Cli
-First Install [NodeJs](https://github.com/com/TarDrive/README.md)
+First Install [NodeJs](https://github.com/com/TarDrive/README.md/19)
 ```
 npm i -g heroku
 ```
