@@ -2,7 +2,7 @@
 ## Deploying on Heroku(Via Termux- Android)
 
 ### Install Termux
--[Termux](https://termux.com/)
+- [Termux](https://termux.com/)
 (Termux is a terminal emulator and Linux environment app for Android. It also doesn't require you to root your device.)
 
 #### Download all Required Packages For this Repository
