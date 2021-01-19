@@ -39,6 +39,16 @@ npm i -g heroku
 ```
 heroku login
 ```
+### Deploy Process
+- First Import/Clone or Fork Fork This Repository Into Your GitHub Account [Click Here](https://t.me/MortalViking) Or Directly Into Termux By Following Command
+```
+git clone https://github.com/mr-U-I1/TarDrive
+```
+- In Termux after cloning repository
+Type ```cd``` and Then Type ```ls``` To Check whether your repository clone is available in termux data storage
+If Available Then Type ```cd TarDrive```
+- - Now Login To Your Heroku Account
+
 
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
