@@ -41,8 +41,26 @@ npm i -g heroku
 ```
 heroku login
 ```
+### Steps Before Deploy Process
+- Create A Telegram Bot By Telegram BotFather Bot [Direct Link To BotFather](https://t.me/BotFather)
+- Set The Following Commands To Your Bot (Note : For me Only These Formatted Commands are accepted. So , I used them as below mentioned)
+```m - Mirror Your DL
+mt - .tar Mirror Your DL
+mf - Mirror TG Files
+t - .tar G-Drive Folders
+um - Extract Your DL
+clone - Clone Your G-Drive Links
+ms - Statuses Of Mirror
+list - List Files In TD
+gf - Hghjkk
+cm - Cancel Your Process
+ca - Cancel All Bot Processes
+gl - Get Index Link Of File
+disk - Stats Of Bot
+count - Drive Url Info```
+
 ### Deploy Process
-- First Import/Clone or Fork Fork This Repository Into Your GitHub Account [Click Here](https://t.me/MortalViking) Or Directly Into Termux By Following Command
+- First Import/Clone or Fork Fork This Repository Into Your GitHub Account [Click Here To Know How](https://t.me/MortalViking) Or Directly Clone This Repository Into Termux By Following Command
 ```
 git clone https://github.com/mr-U-I1/TarDrive
 ```
