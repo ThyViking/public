@@ -29,12 +29,13 @@ pkg install openssl
 ```
 pkg install openssh
 ```
-- To Install Heroku Cli On Termux Android
+- To Install [Heroku Cli](https://devcenter.heroku.com/articles/heroku-cli) On Termux Android
 
 First Install [NodeJs](https://github.com/com/TarDrive/README.md/19)
 ```
 npm i -g heroku
 ```
+- To Login In To Your Heroku Account
 ```
 heroku login
 ```
