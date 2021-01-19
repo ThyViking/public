@@ -1,5 +1,5 @@
 # TarDrive
-## Deploying on Heroku
+## Deploying on Heroku(Via Termux)
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
 - Login into your heroku account with command:
