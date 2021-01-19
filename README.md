@@ -53,6 +53,7 @@ If Available Then Type ```cd TarDrive```
 ```
 heroku create appname	
 ```
+- Use ```git init```
 - Select This App In Your Heroku-Cli: 
 ```
 heroku git:remote -a appname
@@ -61,6 +62,8 @@ heroku git:remote -a appname
 ```
 heroku stack:set container
 ```
+
+
 
 - Restart Worker by these commands:
 ```
