@@ -3,7 +3,41 @@
 
 ### Install Termux
 -[Termux](https://termux.com/)
-(Termux is a terminal emulator and Linux environment app for Android. It also doesn't require you to root your device.) 
+(Termux is a terminal emulator and Linux environment app for Android. It also doesn't require you to root your device.)
+
+#### Download all Required Packages For this Repository
+-Give Storage Permissions
+```
+termux-setup-storage
+```
+-To Install Python
+```
+pkg install python
+```
+-To Install NodeJs
+```
+pkg install nodejs
+```
+```
+pkg install nodejs-lts
+```
+-To Install OpenSSL
+```
+pkg install openssl
+```
+-To Install OpenSSH
+```
+pkg install openssh
+```
+-To Install Heroku Cli
+First Install [NodeJs](https://github.com/com/TarDrive/README.md)
+```
+npm i -g heroku
+```
+```
+heroku login
+```
+
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
 - Login into your heroku account with command:
