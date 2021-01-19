@@ -78,7 +78,7 @@ If Available Then Type ```cd TarDrive```
 ```
 heroku create appname	
 ```
-- Use ```git init```
+- Now Use ```git init```
 - Select This App In Your Heroku-Cli: 
 ```
 heroku git:remote -a appname
@@ -87,9 +87,41 @@ heroku git:remote -a appname
 ```
 heroku stack:set container
 ```
-
-
-
+- Install Aria2
+```
+apt install aria2
+```
+- Install TypeScript
+```
+npm install -g typescript
+```
+- Next
+```
+npm install
+```
+- Compile Above Process To Ur Clone By :
+```
+tsc
+```
+- Start Aria2 Helpful to run the Bot By : (This For Running The Bot Locally By Your Mobile Network and Termux as Hosting Server)
+```
+./aria.sh
+```
+- To Start The Bot Locally On Termux as Hosting Server By :
+```
+npm start
+```
+- Open Telegram and Go to Ur Bot and Send This For Testing whether it's working (This Is Important Step Even If U want Deploy Bot In heroku - Without this Step You'll Get errors in heroku logs)
+```
+/mirror https://raw.githubusercontent.com/out386/aria-telegram-mirror-bot/master/README.md
+```
+- After Sending Above Command To Your Bot , Go Back To Termux and See whether it asks Google Drive API authorization Code. If it asks Copy that URL and paste in browser get access token and enter it in termux
+- Now Go Back To Bot See whether it Mirrored and Uploaded Your Link (If Not You Made Some Mistake) , [Contact Me For Support](https://t.me/MortalViking)
+- Now Deploy This Bot To Heroku By :
+```
+./magic.sh
+```
+- After Deployment Successfull Turn On Your Heroku Dynos By Following Commands
 - Restart Worker by these commands:
 ```
 heroku ps:scale worker=0
