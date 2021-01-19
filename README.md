@@ -44,7 +44,7 @@ heroku login
 ### Steps Before Deploy Process
 - Create A Telegram Bot By Telegram BotFather Bot [Direct Link To BotFather](https://t.me/BotFather)
 - Set The Following Commands To Your Bot
-(You Can Follow This [Click Here](https://github.com/arghyac35/aria-telegram-mirror-bot/README.md/15) If You Not Understand Below One Which were used By me
+(You Can Also Follow This [Click Here](https://github.com/arghyac35/aria-telegram-mirror-bot/README.md#L15) If You Not Understand Below One Which were used By me
 
 (Note : For me Only These Formatted Commands are accepted. So , I used them as below mentioned)
 ```
