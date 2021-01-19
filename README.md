@@ -5,10 +5,11 @@
 - [Termux](https://termux.com/)
 (Termux is a terminal emulator and Linux environment app for Android. It also doesn't require you to root your device.)
 
-- First Give Storage Permissions To Termux (After Using Below Command , Click On 'Allow' When Pop-up Appears)
+- First Give Storage Permissions To Termux
 ```
 termux-setup-storage
 ```
+(After Using Above Command , Click On ```Allow``` When Pop-up Appears)
 
 #### Download all Required Packages For this Repository
 - To Install Python
