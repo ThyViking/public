@@ -47,42 +47,25 @@ git clone https://github.com/mr-U-I1/TarDrive
 - In Termux after cloning repository
 Type ```cd``` and Then Type ```ls``` To Check whether your repository clone is available in termux data storage
 If Available Then Type ```cd TarDrive```
-- - Now Login To Your Heroku Account
+- - Now Login To Your Heroku Account To Know [Click Here](https://t.me/MortalViking)
 
-
-
-- Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
-- Login into your heroku account with command:
-```
-heroku login
-```
-- Create a new heroku app:
+- Create A New Heroku App:(From Here ```appname``` = your own appname)
 ```
 heroku create appname	
 ```
-- Select This App in your Heroku-cli: 
+- Select This App In Your Heroku-Cli: 
 ```
 heroku git:remote -a appname
 ```
-- Change Dyno Stack to a Docker Container:
+- Change Dyno Stack To A Docker Container:
 ```
 heroku stack:set container
 ```
-- Add Private Credentials and Config Stuff:
-```
-git add -f credentials.json token.pickle config.env heroku.yml drive_folder
-```
-- Commit new changes:
-```
-git commit -m "Added Creds."
-```
-- Push Code to Heroku:
-```
-git push heroku master --force
-```
+
 - Restart Worker by these commands:
 ```
 heroku ps:scale worker=0
 ```
 ```
-heroku ps:scale worker=1	 
+heroku ps:scale worker=1
+```	 
