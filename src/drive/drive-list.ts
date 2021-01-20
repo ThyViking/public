@@ -143,7 +143,7 @@ function generateFilesListMessage(files: any[], fileName: string): string {
 
     }
   } else {
-    message = 'There are no files matching your parameters';
+    message = 'There Are No Files Matching Your Parameters';
   }
 
   return message;
@@ -179,7 +179,7 @@ function generateTelegraphContent(files: any[], fileName: string): any[] {
           {
             "tag": "br"
           },
-          file.mimeType === 'application/vnd.google-apps.folder' ? "(folder📁)" : `(${dlUtils.formatSize(file.size)})📄`
+          file.mimeType === 'application/vnd.google-apps.folder' ? "[Folder🗃️]" : `(${dlUtils.formatSize(file.size)})📂`
         ]
       },
       {
