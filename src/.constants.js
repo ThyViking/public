@@ -1,10 +1,10 @@
 module.exports = Object.freeze({
   TOKEN: '1514740352:AAGEh3JsI-hYwarNCQPomGaTI3cwQzv2ZME',
   ARIA_SECRET: 'viking',
-  ARIA_DOWNLOAD_LOCATION: '/bot/downloads (no trailing "/")',
+  ARIA_DOWNLOAD_LOCATION: '/storage/emulated/0/Android/data/data/com.termux/files/home/TarDrive/downloads (no trailing "/")',
   ARIA_DOWNLOAD_LOCATION_ROOT: '/', //The mountpoint that contains ARIA_DOWNLOAD_LOCATION
-  ARIA_FILTERED_DOMAINS: ['yts', 'YTS', 'cruzing.xyz', 'eztv.ag', 'YIFY'], // Prevent downloading from URLs containing these substrings
-  ARIA_FILTERED_FILENAMES: ['YIFY'], // Files/top level directories with these substrings in the filename won't be downloaded
+  ARIA_FILTERED_DOMAINS: [], // Prevent downloading from URLs containing these substrings
+  ARIA_FILTERED_FILENAMES: [], // Files/top level directories with these substrings in the filename won't be downloaded
   ARIA_PORT: 8210, // Port for aria2c RPC server, if you change this here, make sure to update aria.sh as well
   GDRIVE_PARENT_DIR_ID: '0AM_13IiFDgFsUk9PVA',
   OTHER_GDRIVE_DIR_IDS: [], // This is needed if u want to look for files in multiple dirs on list command
