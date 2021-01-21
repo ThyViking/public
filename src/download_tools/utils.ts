@@ -71,7 +71,7 @@ function getSingleStatus(dlDetails: details.DlVars, msg?: TelegramBot.Message): 
         }
       });
     } else {
-      resolve({ message: `You Aren't Authorized To Use This Bot Here.` });
+      resolve({ message: `You aren't authorized to use this bot here.` });
     }
   });
 }
@@ -112,7 +112,7 @@ export function getStatusMessage(): Promise<StatusAll> {
         };
       } else {
         return {
-          message: 'Bot Is Free Now ⏳',
+          message: 'No active or queued downloads',
           totalDownloadCount: 0
         };
       }
@@ -150,12 +150,12 @@ export function generateStatusMessage(totalLength: number, completedLength: numb
   var speedStr = formatSize(speed);
   var eta = downloadETA(totalLength, completedLength, speed);
   var type = dlDetails.isUploading ? 'Uploading' : 'Filename';
-  var message = `<b>${type} :</b> <code>${fileName}</code>\n<b>Size :</b> <code>${totalLengthStr}</code>\n<b>Progress :</b> <code>${progressString}</code>\n<b>Speed :</b> <code>${speedStr}ps</code>\n<b>ETA :</b> <code>${eta}</code>`;
+  var message = `<b>${type}</b>: <code>${fileName}</code>\n<b>Size</b>: <code>${totalLengthStr}</code>\n<b>Progress</b>: <code>${progressString}</code>\n<b>Speed</b>: <code>${speedStr}ps</code>\n<b>ETA</b>: <code>${eta}</code>`;
   if (seeders || peers) {
-    message += `\n<b>Seeders :</b> <code>${seeders || 0}</code> | <b>Peers</b>: <code>${peers || 0}</code>`;
+    message += `\n<b>Seeders</b>: <code>${seeders || 0}</code> | <b>Peers</b>: <code>${peers || 0}</code>`;
   }
   if (!dlDetails.isUploading) {
-    message += `\n<b>Cancel :</b> <code>${dlDetails.gid}</code>`;
+    message += `\n<b>GID</b>: <code>${dlDetails.gid}</code>`;
   }
   var status = {
     message: message,
@@ -176,7 +176,7 @@ export function generateStatusMessage2(totalLength: number, completedLength: num
   var progressString = generateProgress(progress);
   var speedStr = formatSize(speed);
   var eta = downloadETA(totalLength, completedLength, speed);
-  var message = `<b>Size :</b> <code>${totalLengthStr}</code>\n<b>Progress :</b> <code>${progressString}</code>\n<b>Speed :</b> <code>${speedStr}ps</code>\n<b>ETA :</b> <code>${eta}</code>`;
+  var message = `<b>Size</b>: <code>${totalLengthStr}</code>\n<b>Progress</b>: <code>${progressString}</code>\n<b>Speed</b>: <code>${speedStr}ps</code>\n<b>ETA</b>: <code>${eta}</code>`;
   var status = {
     message: message,
     filesize: totalLengthStr
@@ -293,11 +293,12 @@ function cpuAverage() {
 }
 
 // function to calculate average of array
-const arrAvg = function (arr: any[]) {
+const arrAvg = (arr: any[]) => {
   if (arr && arr.length >= 1) {
     const sumArr = arr.reduce((a, b) => a + b, 0)
     return sumArr / arr.length;
   }
+  return 0;
 };
 
 // load average for the past 1000 milliseconds calculated every 100
@@ -317,7 +318,7 @@ export function getCPULoadAVG(avgTime = 1000, delay = 100) {
     let interval = setInterval(() => {
       if (i >= n) {
         clearInterval(interval);
-        resolve(~~((arrAvg(samples) * 100)));
+        resolve(~~(arrAvg(samples) * 100));
       }
 
       const avg2 = cpuAverage();
