@@ -1,7 +1,7 @@
 module.exports = Object.freeze({
   TOKEN: '1535286124:AAERftR2jCc5KT_-Hzx2sK6o3KeRSvtUXEs',
   ARIA_SECRET: 'viking',
-  ARIA_DOWNLOAD_LOCATION: '/storage/emulated/0/Android/data/data/com.termux/files/home/TarDrive1/downloads (no trailing "/")',
+  ARIA_DOWNLOAD_LOCATION: '/storage/emulated/0/Android/data/data/com.termux/files/home/TarDrive2/downloads (no trailing "/")',
   ARIA_DOWNLOAD_LOCATION_ROOT: '/', //The mountpoint that contains ARIA_DOWNLOAD_LOCATION
   ARIA_FILTERED_DOMAINS: [], // Prevent downloading from URLs containing these substrings
   ARIA_FILTERED_FILENAMES: [], // Files/top level directories with these substrings in the filename won't be downloaded
