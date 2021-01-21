@@ -26,7 +26,7 @@ module.exports = Object.freeze({
     NAME: "@Jstardrivebot"
   },
   IS_TEAM_DRIVE: true,
-  USE_SERVICE_ACCOUNT: true,
+  USE_SERVICE_ACCOUNT: false,
   INDEX_DOMAIN: "https://mydrive.googlegroup.workers.dev/0:/My%20drive/",
   TELEGRAPH_TOKEN: 'c808502de4e5b33cbba7efabeb205101b3bb8b065bd39840b13ad1654ed8' // Telegraph token, if you want to show search results in telegra.ph else keep it blank
 });
