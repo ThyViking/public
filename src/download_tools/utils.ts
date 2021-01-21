@@ -7,6 +7,7 @@ import TelegramBot = require('node-telegram-bot-api');
 import details = require('../dl_model/detail');
 import dlm = require('../dl_model/dl-manager');
 var dlManager = dlm.DlManager.getInstance();
+import os from "os";
 
 const PROGRESS_MAX_SIZE = Math.floor(100 / 8);
 const PROGRESS_INCOMPLETE = ['▏', '▎', '▍', '▌', '▋', '▊', '▉'];
@@ -70,7 +71,7 @@ function getSingleStatus(dlDetails: details.DlVars, msg?: TelegramBot.Message): 
         }
       });
     } else {
-      resolve({ message: `You aren't authorized to use this bot here.` });
+      resolve({ message: `You Aren't Authorized To Use This Bot Here.` });
     }
   });
 }
@@ -111,7 +112,7 @@ export function getStatusMessage(): Promise<StatusAll> {
         };
       } else {
         return {
-          message: 'No active or queued downloads',
+          message: 'Bot Is Free Now ⏳',
           totalDownloadCount: 0
         };
       }
@@ -149,12 +150,12 @@ export function generateStatusMessage(totalLength: number, completedLength: numb
   var speedStr = formatSize(speed);
   var eta = downloadETA(totalLength, completedLength, speed);
   var type = dlDetails.isUploading ? 'Uploading' : 'Filename';
-  var message = `<b>${type}</b>: <code>${fileName}</code>\n<b>Size</b>: <code>${totalLengthStr}</code>\n<b>Progress</b>: <code>${progressString}</code>\n<b>Speed</b>: <code>${speedStr}ps</code>\n<b>ETA</b>: <code>${eta}</code>`;
+  var message = `<b>${type} :</b> <code>${fileName}</code>\n<b>Size :</b> <code>${totalLengthStr}</code>\n<b>Progress :</b> <code>${progressString}</code>\n<b>Speed :</b> <code>${speedStr}ps</code>\n<b>ETA :</b> <code>${eta}</code>`;
   if (seeders || peers) {
-    message += `\n<b>Seeders</b>: <code>${seeders || 0}</code> | <b>Peers</b>: <code>${peers || 0}</code>`;
+    message += `\n<b>Seeders :</b> <code>${seeders || 0}</code> | <b>Peers</b>: <code>${peers || 0}</code>`;
   }
   if (!dlDetails.isUploading) {
-    message += `\n<b>GID</b>: <code>${dlDetails.gid}</code>`;
+    message += `\n<b>Cancel :</b> <code>${dlDetails.gid}</code>`;
   }
   var status = {
     message: message,
@@ -175,7 +176,7 @@ export function generateStatusMessage2(totalLength: number, completedLength: num
   var progressString = generateProgress(progress);
   var speedStr = formatSize(speed);
   var eta = downloadETA(totalLength, completedLength, speed);
-  var message = `<b>Size</b>: <code>${totalLengthStr}</code>\n<b>Progress</b>: <code>${progressString}</code>\n<b>Speed</b>: <code>${speedStr}ps</code>\n<b>ETA</b>: <code>${eta}</code>`;
+  var message = `<b>Size :</b> <code>${totalLengthStr}</code>\n<b>Progress :</b> <code>${progressString}</code>\n<b>Speed :</b> <code>${speedStr}ps</code>\n<b>ETA :</b> <code>${eta}</code>`;
   var status = {
     message: message,
     filesize: totalLengthStr
@@ -250,4 +251,85 @@ export function getIdFromUrl(url: string) {
 
 export function checkTrailingSlash(str: string) {
   return str += str.endsWith("/") ? "" : "/";
+}
+
+export function getProcessUptime() {
+  function pad(s: number) {
+    return (s < 10 ? '0' : '') + s;
+  }
+  const uptime = process.uptime();
+  const hours = Math.floor(uptime / (60 * 60));
+  const minutes = Math.floor(uptime % (60 * 60) / 60);
+  const seconds = Math.floor(uptime % 60);
+
+  return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+}
+
+
+//Create function to get CPU information
+function cpuAverage() {
+
+  //Initialise sum of idle and time of cores and fetch CPU info
+  var totalIdle = 0, totalTick = 0;
+  var cpus = os.cpus();
+
+  //Loop through CPU cores
+  for (var i = 0, len = cpus.length; i < len; i++) {
+
+    //Select CPU core
+    var cpu: any = cpus[i];
+    let type: any;
+    //Total up the time in the cores tick
+    for (type in cpu.times) {
+      totalTick += cpu.times[type];
+    }
+
+    //Total up the idle time of the core
+    totalIdle += cpu.times.idle;
+  }
+
+  //Return the average Idle and Tick times
+  return { idle: totalIdle / cpus.length, total: totalTick / cpus.length };
+}
+
+// function to calculate average of array
+const arrAvg = function (arr: any[]) {
+  if (arr && arr.length >= 1) {
+    const sumArr = arr.reduce((a, b) => a + b, 0)
+    return sumArr / arr.length;
+  }
+};
+
+// load average for the past 1000 milliseconds calculated every 100
+export function getCPULoadAVG(avgTime = 1000, delay = 100) {
+
+  return new Promise((resolve, reject) => {
+
+    const n = ~~(avgTime / delay);
+    if (n <= 1) {
+      reject('Error: interval to small');
+    }
+
+    let i = 0;
+    let samples: any[] = [];
+    const avg1 = cpuAverage();
+
+    let interval = setInterval(() => {
+      if (i >= n) {
+        clearInterval(interval);
+        resolve(~~((arrAvg(samples) * 100)));
+      }
+
+      const avg2 = cpuAverage();
+      const totalDiff = avg2.total - avg1.total;
+      const idleDiff = avg2.idle - avg1.idle;
+
+      samples[i] = (1 - idleDiff / totalDiff);
+
+      i++;
+
+    }, delay);
+
+  });
+
 }
