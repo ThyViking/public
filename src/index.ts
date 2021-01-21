@@ -121,7 +121,14 @@ setEventCallback(eventRegex.commandsRegex.authorize, eventRegex.commandsRegexNoN
     msgTools.sendMessage(bot, msg, `This command is only for SUDO_USERS`);
   } else {
     try {
-      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8');
+      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8').catch(async err => {
+        if (err.code === 'ENOENT') {
+          // create authorizedChats.json
+          await writeFile('./authorizedChats.json', JSON.stringify([]));
+        } else {
+          throw new Error(err);
+        }
+      });
       if (alreadyAuthorizedChats) {
         alreadyAuthorizedChats = JSON.parse(alreadyAuthorizedChats);
       } else {
@@ -148,7 +155,13 @@ setEventCallback(eventRegex.commandsRegex.unauthorize, eventRegex.commandsRegexN
     msgTools.sendMessage(bot, msg, `This command is only for SUDO_USERS`);
   } else {
     try {
-      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8');
+      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8').catch(err => {
+        if (err.code === 'ENOENT') {
+          return '';
+        } else {
+          throw new Error(err);
+        }
+      });
       if (alreadyAuthorizedChats) {
         alreadyAuthorizedChats = JSON.parse(alreadyAuthorizedChats);
         const index = alreadyAuthorizedChats.indexOf(msg.chat.id);
@@ -164,8 +177,8 @@ setEventCallback(eventRegex.commandsRegex.unauthorize, eventRegex.commandsRegexN
         msgTools.sendMessage(bot, msg, `No authorized chats found. Please make use this chat was authorized using /authorize command only.`);
       }
     } catch (error) {
-      console.log('authorize: ', error.message);
-      msgTools.sendMessage(bot, msg, `Error authorizing: ${error.message}`);
+      console.log('unauthorize: ', error.message);
+      msgTools.sendMessage(bot, msg, `Error unauthorizing: ${error.message}`);
     }
   }
 });
@@ -919,7 +932,7 @@ function driveUploadCompleteCallback(err: string, gid: string, url: string, file
   if (err) {
     var message = err;
     console.error(`${gid}: Failed to upload - ${filePath}: ${message}`);
-    finalMessage = `Failed To Upload <code>${fileName}</code> to Drive. ${message}`;
+    finalMessage = `Failed to upload <code>${fileName}</code> to Drive. ${message}`;
     cleanupDownload(gid, finalMessage);
   } else {
     console.log(`${gid}: Uploaded `);
@@ -931,11 +944,11 @@ function driveUploadCompleteCallback(err: string, gid: string, url: string, file
     }
 
     if (gdIndexLink && constants.INDEX_DOMAIN) {
-      finalMessage += `\n\n<b>Do Not Share The GDrive Link. \n\nYou Can Share This Link</b>: <a href="${gdIndexLink}">${fileName}</a>`;
+      finalMessage += `\n\n<b>Do not share the GDrive Link. \n\nYou can share this link</b>: <a href="${gdIndexLink}">${fileName}</a>`;
     }
 
     if (constants.IS_TEAM_DRIVE && isFolder) {
-      finalMessage += '\n\n<b>Folders In Shared Drives Can Only Be Shared With Members Of The Drive. Mirror As An Archive If You Need Public Links.</b>';
+      finalMessage += '\n\n<i>Folders in Shared Drives can only be shared with members of the drive. Mirror as an archive if you need public links.</i>';
     }
     cleanupDownload(gid, finalMessage, url);
   }
