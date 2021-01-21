@@ -13,9 +13,9 @@ import driveDownload = require('./drive/drive-tar');
 import details = require('./dl_model/detail');
 import filenameUtils = require('./download_tools/filename-utils');
 import { EventRegex } from './bot_utils/event_regex';
-// import { exec } from 'child_process';
 import checkDiskSpace = require('check-disk-space');
 import gdUtils = require('./drive/gd-utils');
+import { readFile, writeFile } from 'fs-extra';
 
 const telegraph = require('telegraph-node')
 const ph = new telegraph();
@@ -97,23 +97,76 @@ async function checkIfTorrentFile(msg: TelegramBot.Message, match: RegExpExecArr
   return match;
 }
 
-setEventCallback(eventRegex.commandsRegex.disk, eventRegex.commandsRegexNoName.disk, (msg) => {
+setEventCallback(eventRegex.commandsRegex.stats, eventRegex.commandsRegexNoName.stats, async (msg) => {
   if (msgTools.isAuthorized(msg) < 0) {
     msgTools.sendUnauthorizedMessage(bot, msg);
   } else {
-    // exec(`df --output="size,used,avail" -h "${constants.ARIA_DOWNLOAD_LOCATION_ROOT}" | tail -n1`,
-    //   (err, res) => {
-    //     var disk = res.trim().split(/\s+/);
-    //     msgTools.sendMessage(bot, msg, `Total space: ${disk[0]}B\nUsed: ${disk[1]}B\nAvailable: ${disk[2]}B`);
-    //   }
-    // );
-    checkDiskSpace(constants.ARIA_DOWNLOAD_LOCATION_ROOT).then(res => {
-      let used = res.size - res.free;
-      msgTools.sendMessage(bot, msg, `Total space: ${downloadUtils.formatSize(res.size)}\nUsed: ${downloadUtils.formatSize(used)}\nAvailable: ${downloadUtils.formatSize(res.free)}`);
-    }).catch(error => {
-      console.log('checkDiskSpace: ', error.message);
-      msgTools.sendMessage(bot, msg, `Error checking disk space: ${error.message}`);
-    });
+    try {
+      const diskSpace = await checkDiskSpace(constants.ARIA_DOWNLOAD_LOCATION_ROOT);
+      const avgCpuLoad = await downloadUtils.getCPULoadAVG();
+      const botUptime = downloadUtils.getProcessUptime()
+
+      const usedDiskSpace = diskSpace.size - diskSpace.free;
+
+      msgTools.sendMessage(bot, msg, `Total space: ${downloadUtils.formatSize(diskSpace.size)}\nUsed: ${downloadUtils.formatSize(usedDiskSpace)}\nAvailable: ${downloadUtils.formatSize(diskSpace.free)}\nCPU Load: ${avgCpuLoad}\nBot Uptime: ${botUptime}`);
+    } catch (error) {
+      console.log('stats: ', error.message);
+      msgTools.sendMessage(bot, msg, `Error checking stats: ${error.message}`);
+    }
+  }
+});
+
+setEventCallback(eventRegex.commandsRegex.authorize, eventRegex.commandsRegexNoName.authorize, async (msg) => {
+  if (msgTools.isAuthorized(msg) !== 0) {
+    msgTools.sendMessage(bot, msg, `This command is only for SUDO_USERS`);
+  } else {
+    try {
+      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8');
+      if (alreadyAuthorizedChats) {
+        alreadyAuthorizedChats = JSON.parse(alreadyAuthorizedChats);
+      } else {
+        alreadyAuthorizedChats = [];
+      }
+      const allAuthorizedChats: number[] = constants.AUTHORIZED_CHATS.concat(alreadyAuthorizedChats, constants.SUDO_USERS);
+      if (allAuthorizedChats.includes(msg.chat.id)) {
+        msgTools.sendMessage(bot, msg, `Chat already authorized.`);
+      } else {
+        alreadyAuthorizedChats.push(msg.chat.id);
+        await writeFile('./authorizedChats.json', JSON.stringify(alreadyAuthorizedChats)).then(() => {
+          msgTools.sendMessage(bot, msg, `Chat authorized successfully.`, -1);
+        });
+      }
+    } catch (error) {
+      console.log('authorize: ', error.message);
+      msgTools.sendMessage(bot, msg, `Error authorizing: ${error.message}`);
+    }
+  }
+});
+
+setEventCallback(eventRegex.commandsRegex.unauthorize, eventRegex.commandsRegexNoName.unauthorize, async (msg) => {
+  if (msgTools.isAuthorized(msg) !== 0) {
+    msgTools.sendMessage(bot, msg, `This command is only for SUDO_USERS`);
+  } else {
+    try {
+      let alreadyAuthorizedChats: any = await readFile('./authorizedChats.json', 'utf8');
+      if (alreadyAuthorizedChats) {
+        alreadyAuthorizedChats = JSON.parse(alreadyAuthorizedChats);
+        const index = alreadyAuthorizedChats.indexOf(msg.chat.id);
+        if (index > -1) {
+          alreadyAuthorizedChats.splice(index, 1);
+          await writeFile('./authorizedChats.json', JSON.stringify(alreadyAuthorizedChats)).then(() => {
+            msgTools.sendMessage(bot, msg, `Chat unauthorized successfully.`, -1);
+          });
+        } else {
+          msgTools.sendMessage(bot, msg, `Cannot unauthorize this chat. Please make sure this chat was authorized using /authorize command only.`);
+        }
+      } else {
+        msgTools.sendMessage(bot, msg, `No authorized chats found. Please make use this chat was authorized using /authorize command only.`);
+      }
+    } catch (error) {
+      console.log('authorize: ', error.message);
+      msgTools.sendMessage(bot, msg, `Error authorizing: ${error.message}`);
+    }
   }
 });
 
@@ -464,7 +517,7 @@ setEventCallback(eventRegex.commandsRegex.help, eventRegex.commandsRegexNoName.h
     ➖➖➖➖➖➖➖➖➖➖➖➖
     <code>/getfolder</code> or <code>/gf</code> <b>|</b> Send link of drive mirror folder.
     ➖➖➖➖➖➖➖➖➖➖➖➖
-    <code>/disk</code> or <code>/d</code> <b>|</b> Send disk information of the machine.
+    <code>/stats</code> <b>|</b> Send disk information, cpu load of the machine & bot uptime.
     ➖➖➖➖➖➖➖➖➖➖➖➖
     <code>/help</code> or <code>/h</code> <b>|</b> You already know what it does.
     ➖➖➖➖➖➖➖➖➖➖➖➖\n<i>Note: All the above command can also be called using dot(.) instead of slash(/). For e.x: <code>.mirror </code>url or <code>.m </code>url</i>
@@ -866,7 +919,7 @@ function driveUploadCompleteCallback(err: string, gid: string, url: string, file
   if (err) {
     var message = err;
     console.error(`${gid}: Failed to upload - ${filePath}: ${message}`);
-    finalMessage = `Failed to upload <code>${fileName}</code> to Drive. ${message}`;
+    finalMessage = `Failed To Upload <code>${fileName}</code> to Drive. ${message}`;
     cleanupDownload(gid, finalMessage);
   } else {
     console.log(`${gid}: Uploaded `);
@@ -878,11 +931,11 @@ function driveUploadCompleteCallback(err: string, gid: string, url: string, file
     }
 
     if (gdIndexLink && constants.INDEX_DOMAIN) {
-      finalMessage += `\n\n<b>Do not share the GDrive Link. \n\nYou can share this link</b>: <a href="${gdIndexLink}">${fileName}</a>`;
+      finalMessage += `\n\n<b>Do Not Share The GDrive Link. \n\nYou Can Share This Link</b>: <a href="${gdIndexLink}">${fileName}</a>`;
     }
 
     if (constants.IS_TEAM_DRIVE && isFolder) {
-      finalMessage += '\n\n<i>Folders in Shared Drives can only be shared with members of the drive. Mirror as an archive if you need public links.</i>';
+      finalMessage += '\n\n<b>Folders In Shared Drives Can Only Be Shared With Members Of The Drive. Mirror As An Archive If You Need Public Links.</b>';
     }
     cleanupDownload(gid, finalMessage, url);
   }
